@@ -1,0 +1,7 @@
+{
+    "files.associations": {
+        "*.md": "python",
+        "iostream": "cpp",
+        "ostream": "cpp"
+    }
+}
