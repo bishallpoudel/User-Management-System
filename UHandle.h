@@ -13,14 +13,36 @@ class User{
 
     void addUser(string id, string name, string email, string address, string phone, string gender);
 
-    void displayAllUser();
+    RData displayAllUser();
 
-    void displayUser(string name);
+    RData displayUser(string name);
 
     void removeUser(string name);
 
     void updateUser(string name, string email, string address, string phone);
+
+    int rowNumber();
+
+    bool isPresent(string name);
+
 };
+
+// Returning presence status
+bool User::isPresent(string name){
+    this->name = name;
+    bool present = false;
+    SQLite sqldb;
+    present = sqldb.searchRow(name.c_str());
+    return present;
+}
+
+// Returning the number of row
+int User::rowNumber(){
+    SQLite sqldb;
+    int rno = sqldb.returnNoOfRow();
+    sqldb.closeDB();
+    return rno;
+}
 
 // Updating user 
 void User::updateUser(string name, string email, string address, string phone){
@@ -48,21 +70,30 @@ void User::removeUser(string name){
 }
 
 // Display user by its name
-void User::displayUser(string name){
+RData User::displayUser(string name){
     this->name = name;
 
     // Opening, requesting and closing DB
     SQLite sqldb;
-    sqldb.displayRow(name.c_str());
+    RData rdata;
+    rdata = sqldb.displayRow(name.c_str());
     sqldb.closeDB();
+    return rdata;
 }
 
 // Display all the users from DB
-void User::displayAllUser(){
+RData User::displayAllUser(){
     // Opening, requesting and closing DB
     SQLite sqldb;
-    sqldb.displayTable();
+    RData rdta;
+    // rdta = (RData*) malloc(10*sizeof(RData));
+    rdta = sqldb.displayTable();
+    
+    // cout<<sqldb.returnNoOfRow()<<endl;
+    // cout<<"in uhandle"<<endl;
+    // (rdta )->display();
     sqldb.closeDB();
+    return rdta;
 }
 
 // Adding user into DB

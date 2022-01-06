@@ -1,11 +1,33 @@
 #include "UHandle.h"
 #include<time.h>
 
+string idGenerator(){
+    // Making string of year
+    time_t now = time(0);
+    char year[4];
+    strftime(year, 100, "%y", localtime(&now));
+    string stryear (year);
+
+    // Getting user number from table
+    User usr;
+    int num = usr.rowNumber();
+    // cout<<num<<endl;
+    // cout<<num<<endl;
+    int n = 1000 +num +2;
+    // cout<<n<<endl;
+    
+    // Concatinate two string
+    string id = stryear + to_string(n);
+    
+    // Returning id
+    return id;
+}
+
 void inputData(){
     // Getting information using CLI
     string id, name, address, email, gender, phone;
-    cout<<"Enter Id: ";
-    cin>>id;
+    id = idGenerator();
+    // cout<<id<<endl;
     cout<<"Enter full name: ";
     cin.ignore();
     getline(cin, name);
@@ -21,16 +43,31 @@ void inputData(){
 
     // Calling to User class
     User usr;
-    usr.addUser(id, name, email, address, phone, gender);
+    // Check either user is already present or not
+    if (!usr.isPresent(name)){
+        usr.addUser(id, name, email, address, phone, gender);
+        // Success message
+        cout<<"User created succesfully."<<endl;
+    }
 
-    // Success message
-    cout<<"User created succesfully."<<endl;
+    else
+        cout<<"Sorry, "<<name<<" is already in Database."<<endl;
 }
 
 void displayAllData(){
     // Requesting for User class
     User usr;
-    usr.displayAllUser();
+    RData rdata;
+    int n = usr.rowNumber();
+    // cout<<n<<endl;
+    rdata = usr.displayAllUser();
+    cout<<"**** ALL USERS ****"<<endl;
+    cout<<"*******************"<<endl;
+    for(int i=0; i<n; i++){
+        cout<<"--- USER "<<i+1<<" ---"<<endl;
+        cout<<"*******************"<<endl;
+        rdatas[i].display();
+    }
 }
 
 void displayData(){
@@ -41,99 +78,131 @@ void displayData(){
     
     // Calling User class object to do so
     User usr;
-    usr.displayUser(name);
+    RData rdata;
+    if (usr.isPresent(name)){
+        rdata = usr.displayUser(name);
+        cout<<"*******************"<<endl;
+        rdata.display();
+    }
+    else
+        cout<<"Sorry, "<<name<< " is not Found!!"<<endl;
 }
 
 void removeData(){
     // Displaying all the users
-    cout<<"****** ALL USERS ******"<<endl;
-    User usr;
-    usr.displayAllUser();
+    displayAllData();
 
     string name;
     cout<<"Which user do you want to reomve ?"<<endl;
     cin.ignore();
     getline(cin, name);
 
+    User usr;
+    RData rdata;
     // Display user info before removing from DB
-    cout<<"REMOVING USER..."<<endl;
-    usr.displayUser(name);
+    if (usr.isPresent(name)){
+        cout<<"REMOVING USER..."<<endl;
+        rdata = usr.displayUser(name);
+        cout<<"*******************"<<endl;
+        rdata.display();
 
-    // Calling User class object to do so
-    usr.removeUser(name);
+        // Calling User class object to do so
+        usr.removeUser(name);
 
-    // Success message
-    cout<<"Removed successfully"<<endl;
+        // Success message
+        cout<<"Removed successfully"<<endl;
+    }
+    else
+        cout<<name<<" is not Found!!"<<endl;
+
 }
 
 void updateData(){
     // Displaying all the users
-    cout<<"****** ALL USERS ******"<<endl;
-    User usr;
-    usr.displayAllUser();
+    displayAllData();
 
     string name, email, address, phone;
     cout<<"Which user do you want to update ?"<<endl;
     cin.ignore();
     getline(cin, name);
 
-    // Display user info before updatinging from DB
-    cout<<"BEFORE UPDATE..."<<endl;
-    usr.displayUser(name);
+    User usr;
+    if (usr.isPresent(name)){
+        RData rdata;
+        // Display user info before updatinging from DB
+        cout<<"BEFORE UPDATE..."<<endl;
+        rdata = usr.displayUser(name);
+        cout<<"*******************"<<endl;
+        rdata.display();
 
-    // New Informations for upated user
-    cout<<"Enter new information for "<<name<<endl;
-    cout<<"Email: ";
-    cin>>email;
-    cout<<"Address: ";
-    cin.ignore();
-    getline(cin, address);
-    cout<<"Phone: ";
-    cin>>phone;
+        // New Informations for upated user
+        cout<<"Enter new information for "<<name<<endl;
+        cout<<"Email: ";
+        cin>>email;
+        cout<<"Address: ";
+        cin.ignore();
+        getline(cin, address);
+        cout<<"Phone: ";
+        cin>>phone;
 
-    // Sending update request to User object along with new infos
-    usr.updateUser(name, email, address, phone);
+        // Sending update request to User object along with new infos
+        usr.updateUser(name, email, address, phone);
 
-    // Display user info after updatinging from DB
-    cout<<"AFTER UPDATE..."<<endl;
-    usr.displayUser(name);
+        cout<<"Updated successfully"<<endl;
+        // Display user info after updatinging from DB
+        cout<<"\nAFTER UPDATE..."<<endl;
+        rdata = usr.displayUser(name);
+        cout<<"*******************"<<endl;
+        rdata.display();
 
-    cout<<"Updated successfully"<<endl;
+    }
+    else
+        cout<<name<<" is not Found to Update!!"<<endl;
 }
 
 int main(){
-    // This is CLI for user to operate and control over program 
-    int choice;
-    while(1){
-        cout<<"\n1. Add user\
-            \n2. Search/Display user\
-            \n3. Display all users\
-            \n4. Update user\
-            \n5. Remove user\
-            \n6. Exit\n";
-        cout<<"What do You want? "<<endl;
-        cin>>choice;
-        switch(choice){
-            case 1: inputData();
-                    break;
+    // displayAllData();
+    // displayData();
+    // inputData();
+    // removeData();
+    // updateData();
+    // idGenerator();
 
-            case 2: displayData();
-                    break;
+    try{
+        // This is CLI for user to operate and control over program 
+        int choice;
+            cout<<"\n1. Add user\
+                \n2. Search/Display user\
+                \n3. Display all users\
+                \n4. Update user\
+                \n5. Remove user\
+                \n6. Exit\n";
+            cout<<"What do You want? "<<endl;
+            cin>>choice;
+            switch(choice){
+                case 1: inputData();
+                        break;
 
-            case 3: displayAllData();
-                    break;
+                case 2: displayData();
+                        break;
 
-            case 4: updateData();
-                    break;
+                case 3: displayAllData();
+                        break;
 
-            case 5: removeData();
-                    break;
+                case 4: updateData();
+                        break;
 
-            case 6: cout<<"Exiting program..."<<endl;
-                    exit(1);
-            
-            default: cout<<"Enter correct option!!!"<<endl;
-        }
+                case 5: removeData();
+                        break;
+
+                case 6: cout<<"Exiting program..."<<endl;
+                        exit(1);
+                
+                default: throw('a');
+            }
+    }
+    catch(char){
+        cout<<"KeyError, Enter Valid Input!!"<<endl;
     }
     return 0;
 }
