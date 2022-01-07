@@ -88,6 +88,7 @@ RData User::displayAllUser(){
     RData rdta;
     // rdta = (RData*) malloc(10*sizeof(RData));
     rdta = sqldb.displayTable();
+    count = 0;
     
     // cout<<sqldb.returnNoOfRow()<<endl;
     // cout<<"in uhandle"<<endl;

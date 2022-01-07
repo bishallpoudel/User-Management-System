@@ -166,9 +166,11 @@ int main(){
     // inputData();
     // removeData();
     // updateData();
-    // idGenerator();
+    // for(int i=0; i<5; i++)
+    // string n = idGenerator();
 
     try{
+        while(1){
         // This is CLI for user to operate and control over program 
         int choice;
             cout<<"\n1. Add user\
@@ -200,6 +202,7 @@ int main(){
                 
                 default: throw('a');
             }
+       }   
     }
     catch(char){
         cout<<"KeyError, Enter Valid Input!!"<<endl;

@@ -137,6 +137,7 @@ class SQLite{
 };
 
 RData rdatas[100];
+static int count = 0;
 
 // Return either name is in DB or not
 bool SQLite::searchRow(const char* name){
@@ -165,15 +166,16 @@ int SQLite::isPresent(void *status, int argc, char **argv, char **azColName){
 
 // Return total no of row present
 int SQLite::numback(void *nrow, int argc, char **argv, char **azColName){
-    static int *num = (int*)nrow;
-    *num += 1;
+    int *num = (int*)nrow;
+    *num = atoi(argv[0]);
+    // cout<<*num<<endl;
     return 0;
 }
 
 // To return the number of row of table
 int SQLite::returnNoOfRow(){
     // SQL for display all
-    sql = "SELECT * FROM USERS;" ;
+    sql = "SELECT COUNT(*) FROM USERS;" ;
     // cout<<"sql = "<<sql<<endl;
 
     int nrow=0;
@@ -181,6 +183,7 @@ int SQLite::returnNoOfRow(){
     // Run sql
     rOpening = sqlite3_exec(db, sql, numback, &nrow, &aErrMsg);
     // cout<<"rOpening = "<<rOpening<<endl;
+    // cout<<nrow<<endl;
 
     return nrow;
 }
@@ -345,7 +348,6 @@ int SQLite::callbackAll(void *fArg, int argc, char **argv, char **azColName){
     // char **azColName (array of pointer to pointer of charactor array): Holds each column returned
 
     // Now to display the returned contents, It goes row by row
-    static int c;
 
     RData *rd = (RData *) fArg;
     
@@ -368,10 +370,11 @@ int SQLite::callbackAll(void *fArg, int argc, char **argv, char **azColName){
         char* gender = (char *) malloc(strlen(argv[5]) + 1);
         strcpy(gender, argv[5]);
 
-        rdatas[c].append(id, name, email, address, phone, gender);
+        rdatas[count].append(id, name, email, address, phone, gender);
         rd->append(id, name, email, address, phone, gender);
 
-    ++c;
+    ++count;
+    // cout<<count<<endl;
 
     // Returning success
     return 0;
