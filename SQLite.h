@@ -24,43 +24,45 @@ class RData{
         // cout<<"Phone = "<<p<<endl;
         // cout<<"Gender = "<<g<<endl;
         // cout<<endl;
-        id = (char*) malloc(strlen(i)+1);
+        id = new char[strlen(i)+1];
         strcpy(id, i);
-        name = (char*) malloc(strlen(n)+1);
+
+        name = new char[strlen(n)+1];
         strcpy(name, n);
-        email = (char*) malloc(strlen(e)+1);
+
+        email = new char[strlen(e)+1];
         strcpy(email, e);
-        address = (char*) malloc(strlen(a)+1);
+
+        address = new char[strlen(a)+1];
         strcpy(address, a);
-        phone = (char*) malloc(strlen(p)+1);
+
+        phone = new char[strlen(p)+1];
         strcpy(phone, p);
-        gender = (char*) malloc(strlen(g)+1);
+
+        gender = new char[strlen(g)+1];
         strcpy(gender, g);
     }
     void callbacks(int argc, char **argv, char **azColName){
 
         // Assigning returinng data into object variable
-        id = (char *) malloc(strlen(argv[0]) + 1);
+        id = new char[strlen(argv[0]) + 1];
         strcpy(id, argv[0]);
 
-        name = (char *) malloc(strlen(argv[1]) + 1);
+        name = new char[strlen(argv[1]) + 1];
         strcpy(name, argv[1]);
 
-        email = (char *) malloc(strlen(argv[2]) + 1);
+        email = new char[strlen(argv[2]) + 1];
         strcpy(email, argv[2]);
 
-        address = (char *) malloc(strlen(argv[3]) + 1);
+        address = new char[strlen(argv[3]) + 1];
         strcpy(address, argv[3]);
 
-        phone = (char *) malloc(strlen(argv[4]) + 1);
+        phone = new char[strlen(argv[4]) + 1];
         strcpy(phone, argv[4]);
 
-        gender = (char *) malloc(strlen(argv[5]) + 1);
+        gender = new char[strlen(argv[5]) + 1];
         strcpy(gender, argv[5]);
 
-        // vec = new 
-        // string id = res;
-        // cout<<id<<endl;
     }
     void display(){
         // cout<<"from main"<<endl;
@@ -136,7 +138,7 @@ class SQLite{
     // }
 };
 
-RData rdatas[100];
+RData *rdatas;
 static int count = 0;
 
 // Return either name is in DB or not
@@ -352,26 +354,33 @@ int SQLite::callbackAll(void *fArg, int argc, char **argv, char **azColName){
     RData *rd = (RData *) fArg;
     
     // Assigning returinng data into object variable
-        char* id = (char *) malloc(strlen(argv[0]) + 1);
+        char* id = new char[strlen(argv[0]) + 1];
         strcpy(id, argv[0]);
 
-        char* name = (char *) malloc(strlen(argv[1]) + 1);
+        char* name = new char[strlen(argv[1]) + 1];
         strcpy(name, argv[1]);
 
-        char* email = (char *) malloc(strlen(argv[2]) + 1);
+        char* email = new char[strlen(argv[2]) + 1];
         strcpy(email, argv[2]);
 
-        char* address = (char *) malloc(strlen(argv[3]) + 1);
+        char* address = new char[strlen(argv[3]) + 1];
         strcpy(address, argv[3]);
 
-        char* phone = (char *) malloc(strlen(argv[4]) + 1);
+        char* phone = new char[strlen(argv[4]) + 1];
         strcpy(phone, argv[4]);
 
-        char* gender = (char *) malloc(strlen(argv[5]) + 1);
+        char* gender = new char[strlen(argv[5]) + 1];
         strcpy(gender, argv[5]);
 
         rdatas[count].append(id, name, email, address, phone, gender);
         rd->append(id, name, email, address, phone, gender);
+
+        delete [] id;
+        delete [] name;
+        delete [] email;
+        delete [] address;
+        delete [] phone;
+        delete [] gender;
 
     ++count;
     // cout<<count<<endl;

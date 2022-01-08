@@ -28,17 +28,17 @@ void inputData(){
     string id, name, address, email, gender, phone;
     id = idGenerator();
     // cout<<id<<endl;
-    cout<<"Enter full name: ";
+    cout<<"Enter Full Name: ";
     cin.ignore();
     getline(cin, name);
-    cout<<"Enter email: ";
+    cout<<"Enter Email: ";
     cin>>email;
-    cout<<"Enter address: ";
+    cout<<"Enter Address: ";
     cin.ignore();
     getline(cin, address);
-    cout<<"Enter phone no: ";
+    cout<<"Enter Phone No: ";
     cin>>phone;
-    cout<<"Enter gender: ";
+    cout<<"Enter Gender: ";
     cin>>gender;
 
     // Calling to User class
@@ -54,20 +54,31 @@ void inputData(){
         cout<<"Sorry, "<<name<<" is already in Database."<<endl;
 }
 
-void displayAllData(){
+bool displayAllData(){
     // Requesting for User class
+    int user_found=1;
     User usr;
-    RData rdata;
     int n = usr.rowNumber();
-    // cout<<n<<endl;
-    rdata = usr.displayAllUser();
-    cout<<"**** ALL USERS ****"<<endl;
-    cout<<"*******************"<<endl;
-    for(int i=0; i<n; i++){
-        cout<<"--- USER "<<i+1<<" ---"<<endl;
-        cout<<"*******************"<<endl;
-        rdatas[i].display();
+    if (n==0){
+        cout<<"There is no User!!\nGo to Add user."<<endl;
+        user_found=0;
     }
+    else{
+
+        RData rdata;    
+        rdatas = new RData[n*sizeof(RData)];
+        // cout<<n<<endl;
+        rdata = usr.displayAllUser();
+        cout<<"**** ALL USERS ****"<<endl;
+        cout<<"*******************"<<endl;
+        for(int i=0; i<n; i++){
+            cout<<"--- USER "<<i+1<<" ---"<<endl;
+            cout<<"*******************"<<endl;
+            rdatas[i].display();
+        }
+        delete [] rdatas;
+    }
+    return user_found;
 }
 
 void displayData(){
@@ -89,75 +100,79 @@ void displayData(){
 }
 
 void removeData(){
-    // Displaying all the users
-    displayAllData();
+    // Displaying all the users and only if users then execute
 
-    string name;
-    cout<<"Which user do you want to reomve ?"<<endl;
-    cin.ignore();
-    getline(cin, name);
+    if(displayAllData()){
 
-    User usr;
-    RData rdata;
-    // Display user info before removing from DB
-    if (usr.isPresent(name)){
-        cout<<"REMOVING USER..."<<endl;
-        rdata = usr.displayUser(name);
-        cout<<"*******************"<<endl;
-        rdata.display();
+        string name;
+        cout<<"Which user do you want to reomve ?"<<endl;
+        cin.ignore();
+        getline(cin, name);
 
-        // Calling User class object to do so
-        usr.removeUser(name);
+        User usr;
+        RData rdata;
+        // Display user info before removing from DB
+        if (usr.isPresent(name)){
+            cout<<"REMOVING USER..."<<endl;
+            rdata = usr.displayUser(name);
+            cout<<"*******************"<<endl;
+            rdata.display();
 
-        // Success message
-        cout<<"Removed successfully"<<endl;
+            // Calling User class object to do so
+            usr.removeUser(name);
+
+            // Success message
+            cout<<"Removed successfully"<<endl;
+        }
+        else
+            cout<<name<<" is not Found!!"<<endl;
     }
-    else
-        cout<<name<<" is not Found!!"<<endl;
 
 }
 
 void updateData(){
-    // Displaying all the users
-    displayAllData();
+    // Displaying all the users and if found only then execute
 
-    string name, email, address, phone;
-    cout<<"Which user do you want to update ?"<<endl;
-    cin.ignore();
-    getline(cin, name);
+    if(displayAllData()){
 
-    User usr;
-    if (usr.isPresent(name)){
-        RData rdata;
-        // Display user info before updatinging from DB
-        cout<<"BEFORE UPDATE..."<<endl;
-        rdata = usr.displayUser(name);
-        cout<<"*******************"<<endl;
-        rdata.display();
-
-        // New Informations for upated user
-        cout<<"Enter new information for "<<name<<endl;
-        cout<<"Email: ";
-        cin>>email;
-        cout<<"Address: ";
+        string name, email, address, phone;
+        cout<<"Which user do you want to update ?"<<endl;
         cin.ignore();
-        getline(cin, address);
-        cout<<"Phone: ";
-        cin>>phone;
+        getline(cin, name);
 
-        // Sending update request to User object along with new infos
-        usr.updateUser(name, email, address, phone);
+        User usr;
+        if (usr.isPresent(name)){
+            RData rdata;
+            // Display user info before updatinging from DB
+            cout<<"BEFORE UPDATE..."<<endl;
+            rdata = usr.displayUser(name);
+            cout<<"*******************"<<endl;
+            rdata.display();
 
-        cout<<"Updated successfully"<<endl;
-        // Display user info after updatinging from DB
-        cout<<"\nAFTER UPDATE..."<<endl;
-        rdata = usr.displayUser(name);
-        cout<<"*******************"<<endl;
-        rdata.display();
+            // New Informations for upated user
+            cout<<"Enter new information for "<<name<<endl;
+            cout<<"Email: ";
+            cin>>email;
+            cout<<"Address: ";
+            cin.ignore();
+            getline(cin, address);
+            cout<<"Phone: ";
+            cin>>phone;
 
+            // Sending update request to User object along with new infos
+            usr.updateUser(name, email, address, phone);
+
+            cout<<"Updated successfully"<<endl;
+            // Display user info after updatinging from DB
+            cout<<"\nAFTER UPDATE..."<<endl;
+            rdata = usr.displayUser(name);
+            cout<<"*******************"<<endl;
+            rdata.display();
+
+        }
+        else
+            cout<<name<<" is not Found to Update!!"<<endl;
     }
-    else
-        cout<<name<<" is not Found to Update!!"<<endl;
 }
 
 int main(){
